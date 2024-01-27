@@ -3,23 +3,25 @@
   import { buttonVariants } from "@/shared/ui";
   import type { AuthSession } from "@supabase/supabase-js";
   import { Search } from "lucide-svelte";
-  import { onMount } from "svelte";
+  import { onMount, setContext } from "svelte";
   import { Link, Route, Router } from "svelte-routing";
-  import { supabase } from "./shared/lib";
+  import { Context, supabase } from "@/shared/lib";
+  import { writable } from "svelte/store";
 
   export let url = "";
-  let session: AuthSession | null;
+
+  let session = writable<AuthSession | null>(null);
+  setContext(Context.AUTH_SESSION, session);
 
   onMount(() => {
     supabase.auth.getSession().then(({ data }) => {
-      session = data.session;
+      $session = data.session;
     });
 
     supabase.auth.onAuthStateChange((_event, _session) => {
-      session = _session;
+      $session = _session;
     });
   });
-
 </script>
 
 <Router {url}>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { supabase } from "@/shared/lib";
+  import { Context, supabase } from "@/shared/lib";
   import {
     Button,
     Card,
@@ -8,9 +8,13 @@
     CardTitle,
     Separator,
   } from "@/shared/ui";
-  import { Link } from "svelte-routing";
+  import { Link, navigate } from "svelte-routing";
   import type { AuthSchema } from "../schema";
   import { AuthForm } from "../ui";
+  import { getContext } from "svelte";
+
+  const session = getContext(Context.AUTH_SESSION);
+  if (session) navigate("/", { replace: true });
 
   const onSignUp = async (data: AuthSchema) => {
     return supabase.auth.signUp({
