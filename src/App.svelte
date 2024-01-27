@@ -1,10 +1,25 @@
 <script lang="ts">
-  import { SignIn } from "@/pages";
+  import { SignIn, SignUp } from "@/pages";
   import { buttonVariants } from "@/shared/ui";
+  import type { AuthSession } from "@supabase/supabase-js";
   import { Search } from "lucide-svelte";
+  import { onMount } from "svelte";
   import { Link, Route, Router } from "svelte-routing";
+  import { supabase } from "./shared/lib";
 
   export let url = "";
+  let session: AuthSession | null;
+
+  onMount(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      session = data.session;
+    });
+
+    supabase.auth.onAuthStateChange((_event, _session) => {
+      session = _session;
+    });
+  });
+
 </script>
 
 <Router {url}>
@@ -31,7 +46,7 @@
   </header>
   <main class="flex-1">
     <Route path="/sign-in"><SignIn /></Route>
-    <Route path="/sign-up">Sign up</Route>
+    <Route path="/sign-up"><SignUp /></Route>
     <Route path="/">Home</Route>
   </main>
   <footer></footer>
