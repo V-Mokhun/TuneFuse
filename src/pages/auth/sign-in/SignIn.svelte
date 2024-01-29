@@ -1,22 +1,20 @@
 <script lang="ts">
+  import { Context, getSessionContext, supabase } from "@/shared/lib";
   import {
     Button,
     Card,
     CardContent,
     CardHeader,
     CardTitle,
-    Input,
-    Label,
     Separator,
   } from "@/shared/ui";
   import { Link, navigate } from "svelte-routing";
   import type { AuthSchema } from "../schema";
-  import { Context, supabase } from "@/shared/lib";
   import { AuthForm } from "../ui";
-  import { getContext } from "svelte";
 
-  const session = getContext(Context.AUTH_SESSION);
-  if (session) navigate("/", { replace: true });
+  const session = getSessionContext();
+
+  $: if ($session) navigate("/", { replace: true });
 
   const onSignIn = async (data: AuthSchema) => {
     return supabase.auth.signInWithPassword({

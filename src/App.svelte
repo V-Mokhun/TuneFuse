@@ -1,17 +1,17 @@
 <script lang="ts">
   import { SignIn, SignUp } from "@/pages";
+  import { setSessionContext, supabase } from "@/shared/lib";
   import { buttonVariants } from "@/shared/ui";
   import type { AuthSession } from "@supabase/supabase-js";
   import { Search } from "lucide-svelte";
-  import { onMount, setContext } from "svelte";
+  import { onMount } from "svelte";
   import { Link, Route, Router } from "svelte-routing";
-  import { Context, supabase } from "@/shared/lib";
   import { writable } from "svelte/store";
 
   export let url = "";
 
   let session = writable<AuthSession | null>(null);
-  setContext(Context.AUTH_SESSION, session);
+  setSessionContext(session);
 
   onMount(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -43,7 +43,14 @@
       </form>
     </div>
     <div class="flex items-center gap-4">
-      <Link to="/sign-in" class={buttonVariants()}>Sign in</Link>
+      {#if $session}
+        <button
+          class={buttonVariants()}
+          on:click={() => supabase.auth.signOut()}>Sign out</button
+        >
+      {:else}
+        <Link to="/sign-in" class={buttonVariants()}>Sign in</Link>
+      {/if}
     </div>
   </header>
   <main class="flex-1">
