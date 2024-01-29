@@ -15,6 +15,7 @@
   import { onMount } from "svelte";
   import { Link, Route, Router } from "svelte-routing";
   import { writable } from "svelte/store";
+  import logo from "@/assets/images/logo.svg";
 
   export let url = "";
 
@@ -35,7 +36,7 @@
 <Router {url}>
   <header class="flex items-center justify-between gap-4 h-20 px-4 md:px-6">
     <Link class="flex items-center" to="/">
-      <span>TuneFuse</span>
+      <img src={logo} alt="Logo" class="object-cover w-auto h-10" />
     </Link>
     <div class="flex items-center justify-center w-full max-w-md mx-auto">
       <form class="relative w-full">
@@ -55,7 +56,10 @@
         <Popover>
           <PopoverTrigger>
             <Avatar>
-              <!-- <AvatarImage src={$session.user?.} alt="User avatar" /> -->
+              <AvatarImage
+                src={$session.user?.user_metadata?.avatar}
+                alt="User avatar"
+              />
               <AvatarFallback class="uppercase"
                 >{$session.user.user_metadata?.username?.substring(0, 2) ??
                   $session.user.email?.substring(0, 2) ??

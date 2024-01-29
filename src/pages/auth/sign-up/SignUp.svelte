@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Context, supabase } from "@/shared/lib";
+  import { Context, getSessionContext, supabase } from "@/shared/lib";
   import {
     Button,
     Card,
@@ -10,11 +10,12 @@
   } from "@/shared/ui";
   import { Link, navigate } from "svelte-routing";
   import type { AuthSchema } from "../schema";
-  import { AuthForm } from "../ui";
+  import { AuthForm, SocialAuthForm } from "../ui";
   import { getContext } from "svelte";
 
-  const session = getContext(Context.AUTH_SESSION);
-  if (session) navigate("/", { replace: true });
+  const session = getSessionContext();
+
+  $: if ($session) navigate("/", { replace: true });
 
   const onSignUp = async (data: AuthSchema) => {
     return supabase.auth.signUp({
@@ -33,17 +34,7 @@
       <CardTitle class="text-3xl text-center">Sign Up</CardTitle>
     </CardHeader>
     <CardContent class="w-full">
-      <ul class="space-y-2">
-        <li>
-          <Button class="w-full" variant="outline">Sign up with Google</Button>
-        </li>
-        <li>
-          <Button class="w-full" variant="outline">Sign up with GitHub</Button>
-        </li>
-        <li>
-          <Button class="w-full" variant="outline">Sign up with Spotify</Button>
-        </li>
-      </ul>
+      <SocialAuthForm authType="sign-up" />
       <Separator class="my-6" />
       <AuthForm onSubmit={onSignUp} authType="sign-up" />
       <div class="mt-4 text-center text-sm">

@@ -10,7 +10,7 @@
   } from "@/shared/ui";
   import { Link, navigate } from "svelte-routing";
   import type { AuthSchema } from "../schema";
-  import { AuthForm } from "../ui";
+  import { AuthForm, SocialAuthForm } from "../ui";
 
   const session = getSessionContext();
 
@@ -30,17 +30,7 @@
       <CardTitle class="text-3xl text-center">Sign In</CardTitle>
     </CardHeader>
     <CardContent class="w-full">
-      <ul class="space-y-2">
-        <li>
-          <Button class="w-full" variant="outline">Sign in with Google</Button>
-        </li>
-        <li>
-          <Button class="w-full" variant="outline">Sign in with GitHub</Button>
-        </li>
-        <li>
-          <Button class="w-full" variant="outline">Sign in with Spotify</Button>
-        </li>
-      </ul>
+      <SocialAuthForm />
       <Separator class="my-6" />
       <AuthForm onSubmit={onSignIn} />
       <div class="mt-4 text-center text-sm">
