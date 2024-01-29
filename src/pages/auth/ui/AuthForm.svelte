@@ -7,6 +7,7 @@
   import { AuthError, type AuthResponse } from "@supabase/supabase-js";
   import { ZodError } from "zod";
   import { authSchema, type AuthSchema } from "../schema";
+  import { navigate } from "svelte-routing";
   export let onSubmit: (data: AuthSchema) => Promise<AuthResponse>;
   export let authType: AuthType = "sign-in";
 
@@ -23,10 +24,11 @@
 
     try {
       const formData = authSchema.parse({ email, password });
-      const { data, error } = await onSubmit(formData);
+      await onSubmit(formData);
 
       emailError = "";
       passwordError = "";
+      navigate("/", { replace: true });
     } catch (error) {
       if (error instanceof ZodError) {
         error.errors.forEach((err) => {

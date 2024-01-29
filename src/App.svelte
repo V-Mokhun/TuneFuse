@@ -1,9 +1,17 @@
 <script lang="ts">
   import { SignIn, SignUp } from "@/pages";
   import { setSessionContext, supabase } from "@/shared/lib";
-  import { buttonVariants } from "@/shared/ui";
+  import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+    buttonVariants,
+  } from "@/shared/ui";
   import type { AuthSession } from "@supabase/supabase-js";
-  import { Search } from "lucide-svelte";
+  import { LogOut, Search } from "lucide-svelte";
   import { onMount } from "svelte";
   import { Link, Route, Router } from "svelte-routing";
   import { writable } from "svelte/store";
@@ -25,7 +33,7 @@
 </script>
 
 <Router {url}>
-  <header class="flex items-center justify-between h-20 px-4 md:px-6">
+  <header class="flex items-center justify-between gap-4 h-20 px-4 md:px-6">
     <Link class="flex items-center" to="/">
       <span>TuneFuse</span>
     </Link>
@@ -44,10 +52,42 @@
     </div>
     <div class="flex items-center gap-4">
       {#if $session}
-        <button
-          class={buttonVariants()}
-          on:click={() => supabase.auth.signOut()}>Sign out</button
-        >
+        <Popover>
+          <PopoverTrigger>
+            <Avatar>
+              <!-- <AvatarImage src={$session.user?.} alt="User avatar" /> -->
+              <AvatarFallback class="uppercase"
+                >{$session.user.user_metadata?.username?.substring(0, 2) ??
+                  $session.user.email?.substring(0, 2) ??
+                  "TF"}</AvatarFallback
+              >
+            </Avatar>
+          </PopoverTrigger>
+          <PopoverContent class="px-1 py-2 w-60">
+            <ul class="space-y-0.5">
+              <li>
+                <Link
+                  class="block p-2 hover:bg-secondary transition-colors"
+                  to="/profile">Profile</Link
+                >
+              </li>
+              <li class="border-b pb-0.5">
+                <Link
+                  class="block p-2 hover:bg-secondary transition-colors"
+                  to="/settings">Settings</Link
+                >
+              </li>
+              <li>
+                <button
+                  class="flex w-full items-center gap-2 p-2 hover:bg-secondary transition-colors"
+                  on:click={() => supabase.auth.signOut()}
+                >
+                  <LogOut size={20} /> <span>Sign out</span></button
+                >
+              </li>
+            </ul>
+          </PopoverContent>
+        </Popover>
       {:else}
         <Link to="/sign-in" class={buttonVariants()}>Sign in</Link>
       {/if}
