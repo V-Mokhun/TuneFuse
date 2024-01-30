@@ -11,6 +11,7 @@
   import { Link, navigate } from "svelte-routing";
   import type { AuthSchema } from "../schema";
   import { AuthForm, SocialAuthForm } from "../ui";
+  import { SIGN_UP_ROUTE } from "@/shared/consts";
 
   const session = getSessionContext();
 
@@ -35,7 +36,7 @@
       <AuthForm onSubmit={onSignIn} />
       <div class="mt-4 text-center text-sm">
         Don't have an account?
-        <Link class="underline hover:no-underline" to="/sign-up">Sign up</Link>
+        <Link class="underline hover:no-underline" to={SIGN_UP_ROUTE}>Sign up</Link>
       </div>
     </CardContent>
   </Card>

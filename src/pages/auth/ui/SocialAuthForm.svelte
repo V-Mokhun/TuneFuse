@@ -1,9 +1,9 @@
 <script lang="ts">
+  import githubIcon from "@/assets/icons/github.svg";
+  import googleIcon from "@/assets/icons/google.svg";
+  import spotifyIcon from "@/assets/icons/spotify.svg";
   import { supabase } from "@/shared/lib";
   import { Button } from "@/shared/ui";
-  import googleIcon from "@/assets/icons/google.svg";
-  import githubIcon from "@/assets/icons/github.svg";
-  import spotifyIcon from "@/assets/icons/spotify.svg";
   import type { AuthType } from "./AuthForm.svelte";
 
   export let authType: AuthType = "sign-in";

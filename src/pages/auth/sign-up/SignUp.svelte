@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { Context, getSessionContext, supabase } from "@/shared/lib";
+  import { getSessionContext, supabase } from "@/shared/lib";
   import {
-    Button,
     Card,
     CardContent,
     CardHeader,
@@ -11,7 +10,7 @@
   import { Link, navigate } from "svelte-routing";
   import type { AuthSchema } from "../schema";
   import { AuthForm, SocialAuthForm } from "../ui";
-  import { getContext } from "svelte";
+  import { SIGN_IN_ROUTE } from "@/shared/consts";
 
   const session = getSessionContext();
 
@@ -39,7 +38,9 @@
       <AuthForm onSubmit={onSignUp} authType="sign-up" />
       <div class="mt-4 text-center text-sm">
         Already have an account?
-        <Link class="underline hover:no-underline" to="/sign-in">Sign in</Link>
+        <Link class="underline hover:no-underline" to={SIGN_IN_ROUTE}
+          >Sign in</Link
+        >
       </div>
     </CardContent>
   </Card>
