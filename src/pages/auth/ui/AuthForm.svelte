@@ -8,6 +8,7 @@
   import { ZodError } from "zod";
   import { authSchema, type AuthSchema } from "../schema";
   import { navigate } from "svelte-routing";
+  import { toast } from "svelte-sonner";
   export let onSubmit: (data: AuthSchema) => Promise<AuthResponse>;
   export let authType: AuthType = "sign-in";
 
@@ -39,6 +40,9 @@
           }
         });
       } else if (error instanceof AuthError) {
+        toast.error("Error!", {
+          description: error.message,
+        });
       }
     } finally {
       loading = false;
