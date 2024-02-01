@@ -73,7 +73,7 @@
     @apply border-border;
   }
   #app {
-    @apply h-full flex flex-col;
+    @apply h-full flex;
   }
   html, body {
     @apply h-full;

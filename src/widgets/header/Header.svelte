@@ -1,5 +1,5 @@
 <script lang="ts">
-  import logo from "@/assets/images/logo.svg";
+  import logo from "@/assets/images/logo.png";
   import { HOME_ROUTE, SIGN_IN_ROUTE } from "@/shared/consts";
   import { getSessionContext, supabase } from "@/shared/lib";
   import {
@@ -33,8 +33,13 @@
   <header class="py-4">
     <div class="max-w-7xl mx-auto px-4 md:px-6">
       <div class="flex items-center justify-between gap-4">
-        <Link class="flex items-center" to={HOME_ROUTE}>
-          <img src={logo} alt="Logo" class="object-cover w-auto h-10" />
+        <Link class="flex items-center gap-1 shrink-0" to={HOME_ROUTE}>
+          <img
+            src={logo}
+            alt="Logo"
+            class="shrink-0 flex-[0_0_40px] object-cover w-10 h-10 rounded-full outline outline-4 outline-black outline-offset-[-4.5px]"
+          />
+          <span class="text-2xl font-bold hidden md:block">TuneFuse</span>
         </Link>
         <div class="flex items-center justify-center w-full max-w-md mx-auto">
           <form class="relative w-full">
