@@ -66,7 +66,7 @@
               <PopoverTrigger>
                 <Avatar>
                   <AvatarImage
-                    src={$session.user?.user_metadata?.avatar}
+                    src={$session.user?.user_metadata?.avatar_url}
                     alt="User Avatar"
                   />
                   <AvatarFallback class="uppercase"

@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { HOME_ROUTE } from "@/shared/consts";
+  import { HOME_ROUTE, SONGS_ROUTE } from "@/shared/consts";
   import {
     Card,
     CardTitle,
     Popover,
     PopoverContent,
-    PopoverTrigger
+    PopoverTrigger,
   } from "@/shared/ui";
   import {
     Heart,
@@ -30,7 +30,10 @@
         <PopoverContent class="p-1 w-52">
           <ul>
             <li>
-              <button class="flex items-center gap-1 hover:bg-secondary transition-colors w-full p-1" type="button">
+              <button
+                class="flex items-center gap-1 hover:bg-secondary transition-colors w-full p-1"
+                type="button"
+              >
                 <ListMusic size={20} />
                 <span>Create a new playlist</span>
               </button>
@@ -46,7 +49,7 @@
         >
       </li>
       <li>
-        <Link class="flex items-center gap-1" to={HOME_ROUTE}
+        <Link class="flex items-center gap-1" to={SONGS_ROUTE}
           ><Mic2 size={20} /><span>Songs</span></Link
         >
       </li>

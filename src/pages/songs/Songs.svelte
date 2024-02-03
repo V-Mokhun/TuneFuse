@@ -1,32 +1,78 @@
 <script lang="ts">
-  import { cn, getSessionContext, supabase } from "@/shared/lib";
-  import { Container, buttonVariants } from "@/shared/ui";
+  import {
+    getSessionContext,
+    parseAudioMetadata,
+    supabase,
+    type TablesInsert,
+  } from "@/shared/lib";
+  import { buttonVariants, Container } from "@/shared/ui";
   import { onMount } from "svelte";
   import { toast } from "svelte-sonner";
 
   let session = getSessionContext();
   let songs: FileList;
 
-  $: console.log(songs && songs[0]);
-
   const onAddSong = async () => {
+    if (!songs) return;
     if (!$session) {
-      toast.error("You need to be signed in to add a song");
-      return;
+      return toast.error("You need to be signed in to add a song");
     }
 
-    if (songs) {
-      const song = songs[0];
-      const { data, error } = await supabase.storage
-        .from("songs")
-        .upload(song.name, song);
-      console.log(data, error);
+    const song = songs[0];
+    const metadata = ((await parseAudioMetadata(song)) ?? {}) as any;
+    const filePath = `${$session.user.id}/${song.name}`;
+    const picturePath = metadata.picture
+      ? `${$session.user.id}/${metadata.title}.${
+          metadata.picture.type.split("/")[1]
+        }`
+      : null;
+
+    const songData: TablesInsert<"songs"> = {
+      duration: metadata.duration,
+      title: metadata.title ?? "Unknown Title",
+      user_id: $session.user.id,
+      artist: metadata?.artist ?? "Unknown Artist",
+      file_path: filePath,
+      picture_path: picturePath,
+      position: 1,
+    };
+
+    const promiseArray = [
+      supabase.storage.from("songs").upload(filePath, song, {
+        upsert: true,
+      }),
+      supabase.from("songs").insert(songData),
+    ];
+
+    if (picturePath) {
+      promiseArray.push(
+        supabase.storage
+          .from("songs-pictures")
+          .upload(picturePath, metadata.picture, {
+            upsert: true,
+          })
+      );
+    }
+
+    try {
+      const arr = await Promise.all(promiseArray);
+
+      arr.forEach((res) => {
+        if (res.error) {
+          throw res.error;
+        }
+      });
+
+      toast.success(`Song ${song.name} uploaded successfully`);
+    } catch (error) {
+      console.log("Upload song error", error);
+
+      toast.error("Failed to upload song");
     }
   };
 
   onMount(async () => {
     const songs = await supabase.storage.from("songs").list();
-    console.log(songs);
   });
 </script>
 

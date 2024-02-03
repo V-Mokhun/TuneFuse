@@ -1,0 +1,1 @@
+export { parseAudioMetadata } from "./main";
