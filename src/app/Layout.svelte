@@ -2,11 +2,14 @@
   import { Toaster } from "@/shared/ui";
   import { Header, Sidebar } from "@/widgets";
   export let showBasicHeader = false;
+  export let showSidebar = true;
 </script>
 
 <Toaster richColors />
 
-<Sidebar />
+{#if showSidebar}
+  <Sidebar />
+{/if}
 <div class="h-full flex flex-col flex-1">
   <Header {showBasicHeader} />
   <main class="flex-1 px-4">

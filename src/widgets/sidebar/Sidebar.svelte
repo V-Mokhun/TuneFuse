@@ -21,7 +21,7 @@
 
 <Card class="h-screen overflow-y-auto flex-[0_0_200px]">
   <nav class="p-4 text-lg">
-    <CardTitle class="text-3xl mb-4 flex items-center justify-between gap-2"
+    <CardTitle class="text-2xl mb-4 flex items-center justify-between gap-2"
       ><span>Library</span>
       <Popover>
         <PopoverTrigger>
@@ -57,7 +57,7 @@
         <ul></ul>
       </li>
     </ul>
-    <CardTitle class="text-3xl mb-4">My Music</CardTitle>
+    <CardTitle class="text-2xl mb-4">My Music</CardTitle>
     <ul class="space-y-4">
       <li>
         <Link class="flex items-center gap-1" to={HOME_ROUTE}

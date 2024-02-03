@@ -6,6 +6,7 @@
     Avatar,
     AvatarFallback,
     AvatarImage,
+    Container,
     Popover,
     PopoverContent,
     PopoverTrigger,
@@ -21,17 +22,22 @@
 
 {#if showBasicHeader}
   <header class="py-4">
-    <div class="max-w-7xl mx-auto px-4 md:px-6">
+    <Container>
       <div class="flex items-center justify-between gap-4">
-        <Link class="flex items-center" to={HOME_ROUTE}>
-          <img src={logo} alt="Logo" class="object-cover w-auto h-10" />
+        <Link class="flex items-center gap-1 shrink-0" to={HOME_ROUTE}>
+          <img
+            src={logo}
+            alt="Logo"
+            class="shrink-0 flex-[0_0_40px] object-cover w-10 h-10 rounded-full outline outline-4 outline-black outline-offset-[-4.5px]"
+          />
+          <span class="text-2xl font-bold hidden md:block">TuneFuse</span>
         </Link>
       </div>
-    </div>
+    </Container>
   </header>
 {:else}
   <header class="py-4">
-    <div class="max-w-7xl mx-auto px-4 md:px-6">
+    <Container>
       <div class="flex items-center justify-between gap-4">
         <Link class="flex items-center gap-1 shrink-0" to={HOME_ROUTE}>
           <img
@@ -100,7 +106,7 @@
           {/if}
         </div>
       </div>
-    </div>
+    </Container>
   </header>
 {/if}
 
