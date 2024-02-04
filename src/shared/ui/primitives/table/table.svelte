@@ -9,7 +9,7 @@
 </script>
 
 <div class="w-full overflow-auto">
-	<table class={cn("w-full caption-bottom text-sm", className)} {...$$restProps}>
+	<table class={cn("w-full caption-bottom", className)} {...$$restProps}>
 		<slot />
 	</table>
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { cn, type Tables } from "@/shared/lib";
+  import { cn, supabase, type Tables } from "@/shared/lib";
   import {
     Table,
     TableBody,
@@ -17,6 +17,7 @@
   } from "svelte-headless-table";
   import { readable } from "svelte/store";
   import SongsTableActions from "./SongsTableActions.svelte";
+  import SongsTableTitleCol from "./SongsTableTitleCol.svelte";
 
   const songs: Tables<"songs">[] = [
     {
@@ -54,8 +55,21 @@
       header: "#",
     }),
     table.column({
-      accessor: "title",
+      accessor: (item) => ({
+        pictureUrl: item.picture_path,
+        title: item.title,
+      }),
       header: "Title",
+      cell: ({ value: { pictureUrl, title } }) => {
+        const publicUrl = pictureUrl
+          ? supabase.storage.from("songs-pictures").getPublicUrl(pictureUrl)
+          : null;
+
+        return createRender(SongsTableTitleCol, {
+          pictureUrl: publicUrl?.data.publicUrl,
+          title,
+        });
+      },
     }),
     table.column({
       accessor: "artist",
