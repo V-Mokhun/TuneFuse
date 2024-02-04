@@ -8,8 +8,9 @@
     "allowJs": true,
     "checkJs": true,
     "isolatedModules": true,
+    "strict": true,
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
