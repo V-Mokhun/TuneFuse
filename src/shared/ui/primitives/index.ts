@@ -6,3 +6,4 @@ export * from "./label";
 export * from "./popover";
 export * from "./separator";
 export * from "./sonner";
+export * from "./table";

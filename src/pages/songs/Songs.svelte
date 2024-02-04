@@ -1,15 +1,14 @@
 <script lang="ts">
   import {
-    getSessionContext,
     parseAudioMetadata,
     supabase,
     type TablesInsert,
+    session,
   } from "@/shared/lib";
   import { buttonVariants, Container } from "@/shared/ui";
-  import { onMount } from "svelte";
+  import { afterUpdate, onMount } from "svelte";
   import { toast } from "svelte-sonner";
 
-  let session = getSessionContext();
   let songs: FileList;
 
   const onAddSong = async () => {
@@ -67,12 +66,22 @@
     } catch (error) {
       console.log("Upload song error", error);
 
-      toast.error("Failed to upload song");
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to upload song");
+      }
     }
   };
 
-  onMount(async () => {
-    const songs = await supabase.storage.from("songs").list();
+  afterUpdate(async () => {
+    if ($session?.user?.id) {
+      console.log($session?.user?.id);
+      // const songs = await supabase
+      //   .from("songs")
+      //   .select("*")
+      //   .eq("user_id", $session?.user?.id ?? "");
+    }
   });
 </script>
 

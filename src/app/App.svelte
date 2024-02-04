@@ -6,17 +6,12 @@
     SIGN_UP_ROUTE,
     SONGS_ROUTE,
   } from "@/shared/consts";
-  import { setSessionContext, supabase } from "@/shared/lib";
-  import type { AuthSession } from "@supabase/supabase-js";
+  import { session, supabase } from "@/shared/lib";
   import { onMount } from "svelte";
   import { Route, Router } from "svelte-routing";
-  import { writable } from "svelte/store";
   import Layout from "./Layout.svelte";
 
   export let url = "";
-
-  let session = writable<AuthSession | null>(null);
-  setSessionContext(session);
 
   onMount(() => {
     supabase.auth.getSession().then(({ data }) => {

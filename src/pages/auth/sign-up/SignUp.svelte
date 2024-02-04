@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getSessionContext, supabase } from "@/shared/lib";
+  import { session, supabase } from "@/shared/lib";
   import {
     Card,
     CardContent,
@@ -11,8 +11,6 @@
   import type { AuthSchema } from "../schema";
   import { AuthForm, SocialAuthForm } from "../ui";
   import { SIGN_IN_ROUTE } from "@/shared/consts";
-
-  const session = getSessionContext();
 
   $: if ($session) navigate("/", { replace: true });
 

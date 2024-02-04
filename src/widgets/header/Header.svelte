@@ -1,7 +1,7 @@
 <script lang="ts">
   import logo from "@/assets/images/logo.png";
   import { HOME_ROUTE, SIGN_IN_ROUTE } from "@/shared/consts";
-  import { getSessionContext, supabase } from "@/shared/lib";
+  import { session, supabase } from "@/shared/lib";
   import {
     Avatar,
     AvatarFallback,
@@ -16,8 +16,6 @@
   import { Link } from "svelte-routing";
 
   export let showBasicHeader = false;
-
-  const session = getSessionContext();
 </script>
 
 {#if showBasicHeader}
