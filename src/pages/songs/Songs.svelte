@@ -22,7 +22,7 @@
     const metadata = ((await parseAudioMetadata(song)) ?? {}) as any;
     const filePath = `${$session.user.id}/${song.name}`;
     const picturePath = metadata.picture
-      ? `${$session.user.id}/${metadata.title}.${
+      ? `${$session.user.id}/${metadata.title.replace(/[<>:"/\\|?*]/g, "_")}.${
           metadata.picture.type.split("/")[1]
         }`
       : null;
@@ -34,7 +34,7 @@
       artist: metadata?.artist ?? "Unknown Artist",
       file_path: filePath,
       picture_path: picturePath,
-      position: 1,
+      position: 2,
     };
 
     const promiseArray = [
