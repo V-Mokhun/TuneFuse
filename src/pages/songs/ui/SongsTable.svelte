@@ -1,0 +1,126 @@
+<script lang="ts">
+  import { cn, type Tables } from "@/shared/lib";
+  import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from "@/shared/ui";
+  import { Clock } from "lucide-svelte";
+  import {
+    Render,
+    Subscribe,
+    createRender,
+    createTable,
+  } from "svelte-headless-table";
+  import { readable } from "svelte/store";
+  import SongsTableActions from "./SongsTableActions.svelte";
+
+  const songs: Tables<"songs">[] = [
+    {
+      id: 9,
+      created_at: "2024-02-03T19:41:39.472273+00:00",
+      updated_at: "2024-02-03T19:41:39.472273+00:00",
+      title: "Forest",
+      artist: "Twenty One Pilots",
+      file_path: "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Forest.mp3",
+      user_id: "844be2a3-9ed5-4f7f-a3fc-8241877707c8",
+      duration: 251,
+      picture_path: "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Forest.jpeg",
+      position: 1,
+    },
+    {
+      id: 13,
+      created_at: "2024-02-04T09:40:32.84511+00:00",
+      updated_at: "2024-02-04T09:40:32.84511+00:00",
+      title: "Right Or Wrong | beatfakaza.com",
+      artist: "Juice WRLD | beatfakaza.com",
+      file_path:
+        "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Juice-WRLD - Right-Or-Wrong.mp3",
+      user_id: "844be2a3-9ed5-4f7f-a3fc-8241877707c8",
+      duration: 160,
+      picture_path:
+        "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Right Or Wrong _ beatfakaza.com.jpeg",
+      position: 2,
+    },
+  ];
+
+  const table = createTable(readable(songs));
+  const columns = table.createColumns([
+    table.column({
+      accessor: "position",
+      header: "#",
+    }),
+    table.column({
+      accessor: "title",
+      header: "Title",
+    }),
+    table.column({
+      accessor: "artist",
+      header: "Artist",
+    }),
+    table.column({
+      accessor: "duration",
+      header: createRender(Clock, { size: 24, class: "block w-full" }),
+      cell: ({ value }) => {
+        const minutes = Math.floor(value / 60);
+        const seconds = value - minutes * 60;
+        return `${minutes}:${seconds}`;
+      },
+    }),
+    table.column({
+      accessor: ({ id }) => id,
+      header: "",
+      cell: ({ value }) => {
+        return createRender(SongsTableActions, { id: value });
+      },
+    }),
+  ]);
+
+  const { headerRows, pageRows, tableAttrs, tableBodyAttrs } =
+    table.createViewModel(columns);
+</script>
+
+<Table {...$tableAttrs}>
+  <TableHeader>
+    {#each $headerRows as headerRow}
+      <Subscribe rowAttrs={headerRow.attrs()}>
+        <TableRow>
+          {#each headerRow.cells as cell (cell.id)}
+            <Subscribe attrs={cell.attrs()} let:attrs props={cell.props()}>
+              <TableHead {...attrs}>
+                <Render of={cell.render()} />
+              </TableHead>
+            </Subscribe>
+          {/each}
+        </TableRow>
+      </Subscribe>
+    {/each}
+  </TableHeader>
+  <TableBody {...$tableBodyAttrs}>
+    {#each $pageRows as row (row.id)}
+      <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
+        <TableRow {...rowAttrs}>
+          {#each row.cells as cell (cell.id)}
+            <Subscribe attrs={cell.attrs()} let:attrs>
+              <TableCell
+                class={cn({
+                  "py-4 px-2 text-center":
+                    cell.id === "" || cell.id === "duration",
+                })}
+                {...attrs}
+              >
+                <Render of={cell.render()} />
+              </TableCell>
+            </Subscribe>
+          {/each}
+        </TableRow>
+      </Subscribe>
+    {/each}
+  </TableBody>
+</Table>
+
+<style>
+</style>
