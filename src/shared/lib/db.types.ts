@@ -97,6 +97,7 @@ export interface Database {
           duration: number
           file_path: string | null
           id: number
+          isLiked: boolean
           picture_path: string | null
           position: number
           title: string
@@ -109,6 +110,7 @@ export interface Database {
           duration: number
           file_path?: string | null
           id?: number
+          isLiked?: boolean
           picture_path?: string | null
           position: number
           title: string
@@ -121,6 +123,7 @@ export interface Database {
           duration?: number
           file_path?: string | null
           id?: number
+          isLiked?: boolean
           picture_path?: string | null
           position?: number
           title?: string

@@ -31,6 +31,7 @@
       duration: 251,
       picture_path: "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Forest.jpeg",
       position: 1,
+      isLiked: false,
     },
     {
       id: 13,
@@ -45,6 +46,7 @@
       picture_path:
         "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Right Or Wrong _ beatfakaza.com.jpeg",
       position: 2,
+      isLiked: false,
     },
   ];
 
@@ -85,10 +87,10 @@
       },
     }),
     table.column({
-      accessor: ({ id }) => id,
+      accessor: (item) => item,
       header: "",
       cell: ({ value }) => {
-        return createRender(SongsTableActions, { id: value });
+        return createRender(SongsTableActions, { song: value });
       },
     }),
   ]);
@@ -121,6 +123,7 @@
             <Subscribe attrs={cell.attrs()} let:attrs>
               <TableCell
                 class={cn({
+                  "truncate max-w-56": true,
                   "py-4 px-2 text-center":
                     cell.id === "" || cell.id === "duration",
                 })}

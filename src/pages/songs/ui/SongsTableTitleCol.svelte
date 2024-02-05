@@ -7,7 +7,7 @@
   {#if pictureUrl}
     <img class="w-10 h-10 rounded-md" src={pictureUrl} alt={title} />
   {/if}
-  <span>{title}</span>
+  <span class="truncate">{title}</span>
 </div>
 
 <style>

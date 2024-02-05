@@ -1,14 +1,27 @@
 <script lang="ts">
+  import { supabase, type Tables } from "@/shared/lib";
   import {
     Button,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
   } from "@/shared/ui";
   import { MoreHorizontal } from "lucide-svelte";
 
-  export let id: number;
+  export let song: Tables<"songs">;
+  export let playlistId: string | undefined = undefined;
+
+  function handleLikeSong() {
+    console.log(song.isLiked);
+    supabase
+      .from("songs")
+      .update({ isLiked: !song.isLiked })
+      .eq("id", song.id)
+      .then((res) => {
+        console.log(res);
+      });
+  }
 </script>
 
 <DropdownMenu>
@@ -26,7 +39,11 @@
   <DropdownMenuContent>
     <DropdownMenuItem>Add to playlist</DropdownMenuItem>
     <DropdownMenuItem>Remove from this playlist</DropdownMenuItem>
-    <DropdownMenuItem>Save to your Liked Songs</DropdownMenuItem>
+    <DropdownMenuItem>
+      <button type="button" on:click={handleLikeSong}
+        >{song.isLiked ? "Remove from" : "Add to"} your Liked Songs</button
+      >
+    </DropdownMenuItem>
     <DropdownMenuItem>Add to queue</DropdownMenuItem>
     <DropdownMenuItem>Delete this song</DropdownMenuItem>
   </DropdownMenuContent>
