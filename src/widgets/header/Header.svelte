@@ -7,6 +7,7 @@
     AvatarFallback,
     AvatarImage,
     Container,
+    Input,
     Popover,
     PopoverContent,
     PopoverTrigger,
@@ -45,19 +46,15 @@
           />
           <span class="text-2xl font-bold hidden md:block">TuneFuse</span>
         </Link>
-        <div class="flex items-center justify-center w-full max-w-md mx-auto">
+        <!-- <div class="flex items-center justify-center w-full max-w-md mx-auto">
           <form class="relative w-full">
             <Search
               size={24}
-              class="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400"
+              class="absolute left-2.5 top-3 h-4 w-4 text-gray-500 dark:text-gray-400"
             />
-            <input
-              type="search"
-              class="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-8 w-full"
-              placeholder="Search for songs, artists, albums..."
-            />
+            <Input class="pl-8" placeholder="Search for songs, playlists.." />
           </form>
-        </div>
+        </div> -->
         <div class="flex items-center gap-4">
           {#if $session}
             <Popover>

@@ -18,9 +18,15 @@
     { id: "artist", text: "Artist" },
     { id: "duration", text: "Duration" },
   ];
+  const SORT_TITLES: Record<string, string> = {
+    created_at: "Date added",
+    title: "Title",
+    artist: "Artist",
+    duration: "Duration",
+    position: "Custom order",
+  };
 
   export let sortKeys: WritableSortKeys;
-  $: console.log($sortKeys);
 
   const onSortClick = (id: string) => {
     sortKeys.toggleId(id, {
@@ -37,15 +43,15 @@
       builders={[builder]}
       class="px-1 flex items-center gap-1 h-8"
     >
-      <List class="w-4 h-4" />
-      <span>{$sortKeys[0].id}</span>
+      <span>{SORT_TITLES[$sortKeys[0].id]}</span>
+      <List class="w-6 h-6" />
     </Button>
   </DropdownMenuTrigger>
   <DropdownMenuContent>
     <DropdownMenuLabel>Sort by</DropdownMenuLabel>
     <DropdownMenuGroup>
       <DropdownMenuItem
-        class={cn("flex items-center gap-1", {
+        class={cn("flex items-center gap-1 text-base", {
           "text-primary data-[highlighted]:text-primary":
             $sortKeys[0].id === "position",
         })}
@@ -62,7 +68,7 @@
       </DropdownMenuItem>
       {#each SORT_KEYS as sortKey}
         <DropdownMenuItem
-          class={cn("flex items-center gap-1", {
+          class={cn("flex items-center gap-1 text-base", {
             "text-primary data-[highlighted]:text-primary":
               $sortKeys[0].id === sortKey.id,
           })}

@@ -15,11 +15,12 @@
     createRender,
     createTable,
   } from "svelte-headless-table";
-  import { addSortBy } from "svelte-headless-table/plugins";
+  import { addSortBy, addTableFilter } from "svelte-headless-table/plugins";
   import { readable } from "svelte/store";
   import SongsTableActions from "./SongsTableActions.svelte";
   import SongsTableTitleCol from "./SongsTableTitleCol.svelte";
   import SongsTableSort from "./SongsTableSort.svelte";
+  import SongsTableFilter from "./SongsTableFilter.svelte";
 
   const songs: Tables<"songs">[] = [
     {
@@ -63,15 +64,30 @@
         },
       ],
     }),
+    filter: addTableFilter({
+      fn: ({ filterValue, value }) =>
+        value.toLowerCase().includes(filterValue.toLowerCase()),
+    }),
   });
+
   const columns = table.createColumns([
     table.column({
       accessor: "created_at",
       header: "",
+      plugins: {
+        filter: {
+          exclude: true,
+        },
+      },
     }),
     table.column({
       accessor: "position",
       header: "#",
+      plugins: {
+        filter: {
+          exclude: true,
+        },
+      },
     }),
     table.column({
       id: "title",
@@ -94,6 +110,9 @@
         sort: {
           getSortValue: (item) => item.title,
         },
+        filter: {
+          getFilterValue: (item) => item.title,
+        },
       },
     }),
     table.column({
@@ -108,6 +127,11 @@
         const seconds = value - minutes * 60;
         return `${minutes}:${seconds}`;
       },
+      plugins: {
+        filter: {
+          exclude: true,
+        },
+      },
     }),
     table.column({
       accessor: (item) => item,
@@ -115,18 +139,28 @@
       cell: ({ value }) => {
         return createRender(SongsTableActions, { song: value });
       },
+      plugins: {
+        sort: {
+          disable: true,
+        },
+        filter: {
+          exclude: true,
+        },
+      },
     }),
   ]);
 
   const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } =
     table.createViewModel(columns);
   const { sortKeys } = pluginStates.sort;
+  const { filterValue } = pluginStates.filter;
 </script>
 
-<div class="flex items-center justify-between gap-4">
+<div class="flex items-center justify-between gap-4 mb-6">
+  <SongsTableFilter {filterValue} />
   <SongsTableSort {sortKeys} />
 </div>
-<div class="rounded-md border">
+<div class="">
   <Table {...$tableAttrs}>
     <TableHeader>
       {#each $headerRows as headerRow}
