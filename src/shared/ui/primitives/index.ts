@@ -8,3 +8,4 @@ export * from "./separator";
 export * from "./sonner";
 export * from "./table";
 export * from "./dropdown-menu";
+export * from "./context-menu";

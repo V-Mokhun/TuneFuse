@@ -1,1 +1,1 @@
-export { default as Songs } from "./Songs.svelte";
+export { default as SongsPage } from "./SongsPage.svelte";

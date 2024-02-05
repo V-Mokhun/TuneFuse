@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Container } from "@/shared/ui";
   import { afterUpdate, onMount } from "svelte";
-  import { AddSong, SongsTable } from "./ui";
+  import { AddSong, Songs } from "./ui";
   import { supabase } from "@/shared/lib";
 
   afterUpdate(async () => {
@@ -23,7 +23,7 @@
       <AddSong />
     </div>
 
-    <SongsTable />
+    <Songs />
   </Container>
 </section>
 

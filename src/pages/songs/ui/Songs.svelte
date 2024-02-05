@@ -1,6 +1,10 @@
 <script lang="ts">
   import { cn, supabase, type Tables } from "@/shared/lib";
   import {
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuTrigger,
+    DropdownMenuItem,
     Table,
     TableBody,
     TableCell,
@@ -17,10 +21,10 @@
   } from "svelte-headless-table";
   import { addSortBy, addTableFilter } from "svelte-headless-table/plugins";
   import { readable } from "svelte/store";
-  import SongsTableActions from "./SongsTableActions.svelte";
-  import SongsTableTitleCol from "./SongsTableTitleCol.svelte";
-  import SongsTableSort from "./SongsTableSort.svelte";
-  import SongsTableFilter from "./SongsTableFilter.svelte";
+  import SongsActions from "./SongsActions.svelte";
+  import SongsTitleCol from "./SongsTitleCol.svelte";
+  import SongsSort from "./SongsSort.svelte";
+  import SongsFilter from "./SongsFilter.svelte";
 
   const songs: Tables<"songs">[] = [
     {
@@ -101,7 +105,7 @@
           ? supabase.storage.from("songs-pictures").getPublicUrl(pictureUrl)
           : null;
 
-        return createRender(SongsTableTitleCol, {
+        return createRender(SongsTitleCol, {
           pictureUrl: publicUrl?.data.publicUrl,
           title,
         });
@@ -137,7 +141,7 @@
       accessor: (item) => item,
       header: "",
       cell: ({ value }) => {
-        return createRender(SongsTableActions, { song: value });
+        return createRender(SongsActions, { song: value });
       },
       plugins: {
         sort: {
@@ -157,8 +161,8 @@
 </script>
 
 <div class="flex items-center justify-between gap-4 mb-6">
-  <SongsTableFilter {filterValue} />
-  <SongsTableSort {sortKeys} />
+  <SongsFilter {filterValue} />
+  <SongsSort {sortKeys} />
 </div>
 <div class="">
   <Table {...$tableAttrs}>
@@ -182,24 +186,41 @@
     <TableBody {...$tableBodyAttrs}>
       {#each $pageRows as row (row.id)}
         <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-          <TableRow {...rowAttrs}>
-            {#each row.cells as cell (cell.id)}
-              {#if cell.id !== "created_at"}
-                <Subscribe attrs={cell.attrs()} let:attrs>
-                  <TableCell
-                    class={cn({
-                      "truncate max-w-56": true,
-                      "py-4 px-2 text-center":
-                        cell.id === "" || cell.id === "duration",
-                    })}
-                    {...attrs}
-                  >
-                    <Render of={cell.render()} />
-                  </TableCell>
-                </Subscribe>
-              {/if}
-            {/each}
-          </TableRow>
+          <ContextMenu>
+            <ContextMenuTrigger asChild let:builder>
+              <TableRow {...rowAttrs} {...builder} action={builder.action}>
+                {#each row.cells as cell (cell.id)}
+                  {#if cell.id !== "created_at"}
+                    <Subscribe attrs={cell.attrs()} let:attrs>
+                      <TableCell
+                        class={cn({
+                          "truncate max-w-56": true,
+                          "py-4 px-2 text-center":
+                            cell.id === "" || cell.id === "duration",
+                        })}
+                        {...attrs}
+                      >
+                        <Render of={cell.render()} />
+                      </TableCell>
+                    </Subscribe>
+                  {/if}
+                {/each}
+              </TableRow>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <DropdownMenuItem>Add to playlist</DropdownMenuItem>
+              <!-- {#if playlistId}
+                <DropdownMenuItem>Remove from this playlist</DropdownMenuItem>
+              {/if} -->
+              <DropdownMenuItem>
+                <!-- <button type="button" on:click={handleLikeSong}
+                  >{song.isLiked ? "Remove from" : "Add to"} your Liked Songs</button
+                > -->
+              </DropdownMenuItem>
+              <DropdownMenuItem>Add to queue</DropdownMenuItem>
+              <DropdownMenuItem>Delete this song</DropdownMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
         </Subscribe>
       {/each}
     </TableBody>

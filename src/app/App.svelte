@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SignIn, SignUp, Songs } from "@/pages";
+  import { SignIn, SignUp, SongsPage } from "@/pages";
   import {
     HOME_ROUTE,
     SIGN_IN_ROUTE,
@@ -42,7 +42,7 @@
   </Route>
   <Route path={SONGS_ROUTE}>
     <Layout>
-      <Songs />
+      <SongsPage />
     </Layout>
   </Route>
 </Router>
