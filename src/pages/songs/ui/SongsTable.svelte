@@ -15,9 +15,11 @@
     createRender,
     createTable,
   } from "svelte-headless-table";
+  import { addSortBy } from "svelte-headless-table/plugins";
   import { readable } from "svelte/store";
   import SongsTableActions from "./SongsTableActions.svelte";
   import SongsTableTitleCol from "./SongsTableTitleCol.svelte";
+  import SongsTableSort from "./SongsTableSort.svelte";
 
   const songs: Tables<"songs">[] = [
     {
@@ -50,13 +52,29 @@
     },
   ];
 
-  const table = createTable(readable(songs));
+  const table = createTable(readable(songs), {
+    sort: addSortBy({
+      disableMultiSort: true,
+      toggleOrder: ["asc", "desc"],
+      initialSortKeys: [
+        {
+          id: "created_at",
+          order: "desc",
+        },
+      ],
+    }),
+  });
   const columns = table.createColumns([
+    table.column({
+      accessor: "created_at",
+      header: "",
+    }),
     table.column({
       accessor: "position",
       header: "#",
     }),
     table.column({
+      id: "title",
       accessor: (item) => ({
         pictureUrl: item.picture_path,
         title: item.title,
@@ -71,6 +89,11 @@
           pictureUrl: publicUrl?.data.publicUrl,
           title,
         });
+      },
+      plugins: {
+        sort: {
+          getSortValue: (item) => item.title,
+        },
       },
     }),
     table.column({
@@ -95,49 +118,59 @@
     }),
   ]);
 
-  const { headerRows, pageRows, tableAttrs, tableBodyAttrs } =
+  const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } =
     table.createViewModel(columns);
+  const { sortKeys } = pluginStates.sort;
 </script>
 
-<Table {...$tableAttrs}>
-  <TableHeader>
-    {#each $headerRows as headerRow}
-      <Subscribe rowAttrs={headerRow.attrs()}>
-        <TableRow>
-          {#each headerRow.cells as cell (cell.id)}
-            <Subscribe attrs={cell.attrs()} let:attrs props={cell.props()}>
-              <TableHead {...attrs}>
-                <Render of={cell.render()} />
-              </TableHead>
-            </Subscribe>
-          {/each}
-        </TableRow>
-      </Subscribe>
-    {/each}
-  </TableHeader>
-  <TableBody {...$tableBodyAttrs}>
-    {#each $pageRows as row (row.id)}
-      <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-        <TableRow {...rowAttrs}>
-          {#each row.cells as cell (cell.id)}
-            <Subscribe attrs={cell.attrs()} let:attrs>
-              <TableCell
-                class={cn({
-                  "truncate max-w-56": true,
-                  "py-4 px-2 text-center":
-                    cell.id === "" || cell.id === "duration",
-                })}
-                {...attrs}
-              >
-                <Render of={cell.render()} />
-              </TableCell>
-            </Subscribe>
-          {/each}
-        </TableRow>
-      </Subscribe>
-    {/each}
-  </TableBody>
-</Table>
+<div class="flex items-center justify-between gap-4">
+  <SongsTableSort {sortKeys} />
+</div>
+<div class="rounded-md border">
+  <Table {...$tableAttrs}>
+    <TableHeader>
+      {#each $headerRows as headerRow}
+        <Subscribe rowAttrs={headerRow.attrs()}>
+          <TableRow>
+            {#each headerRow.cells as cell (cell.id)}
+              {#if cell.id !== "created_at"}
+                <Subscribe attrs={cell.attrs()} let:attrs props={cell.props()}>
+                  <TableHead {...attrs}>
+                    <Render of={cell.render()} />
+                  </TableHead>
+                </Subscribe>
+              {/if}
+            {/each}
+          </TableRow>
+        </Subscribe>
+      {/each}
+    </TableHeader>
+    <TableBody {...$tableBodyAttrs}>
+      {#each $pageRows as row (row.id)}
+        <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
+          <TableRow {...rowAttrs}>
+            {#each row.cells as cell (cell.id)}
+              {#if cell.id !== "created_at"}
+                <Subscribe attrs={cell.attrs()} let:attrs>
+                  <TableCell
+                    class={cn({
+                      "truncate max-w-56": true,
+                      "py-4 px-2 text-center":
+                        cell.id === "" || cell.id === "duration",
+                    })}
+                    {...attrs}
+                  >
+                    <Render of={cell.render()} />
+                  </TableCell>
+                </Subscribe>
+              {/if}
+            {/each}
+          </TableRow>
+        </Subscribe>
+      {/each}
+    </TableBody>
+  </Table>
+</div>
 
 <style>
 </style>

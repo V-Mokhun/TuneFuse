@@ -1,10 +1,10 @@
 <script lang="ts">
   import { Button as ButtonPrimitive } from "bits-ui";
   import { cn } from "@/shared/lib";
-  import { buttonVariants, type Props, type Events } from ".";
+  import { buttonVariants, type ButtonProps, type ButtonEvents } from ".";
 
-  type $$Props = Props;
-  type $$Events = Events;
+  type $$Props = ButtonProps;
+  type $$Events = ButtonEvents;
 
   let className: $$Props["class"] = undefined;
   export let variant: $$Props["variant"] = "default";

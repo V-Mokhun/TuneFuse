@@ -23,9 +23,7 @@
       <AddSong />
     </div>
 
-    <div class="rounded-md border">
-      <SongsTable />
-    </div>
+    <SongsTable />
   </Container>
 </section>
 

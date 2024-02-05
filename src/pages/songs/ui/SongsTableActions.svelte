@@ -8,18 +8,24 @@
     DropdownMenuTrigger,
   } from "@/shared/ui";
   import { MoreHorizontal } from "lucide-svelte";
+  import { toast } from "svelte-sonner";
 
   export let song: Tables<"songs">;
   export let playlistId: string | undefined = undefined;
 
   function handleLikeSong() {
-    console.log(song.isLiked);
     supabase
       .from("songs")
       .update({ isLiked: !song.isLiked })
       .eq("id", song.id)
       .then((res) => {
-        console.log(res);
+        if (res.error) {
+          toast.error(res.error.message);
+        } else {
+          toast.success(
+            `${song.isLiked ? "Removed from" : "Added to"} your Liked Songs`
+          );
+        }
       });
   }
 </script>
@@ -38,7 +44,9 @@
   </DropdownMenuTrigger>
   <DropdownMenuContent>
     <DropdownMenuItem>Add to playlist</DropdownMenuItem>
-    <DropdownMenuItem>Remove from this playlist</DropdownMenuItem>
+    {#if playlistId}
+      <DropdownMenuItem>Remove from this playlist</DropdownMenuItem>
+    {/if}
     <DropdownMenuItem>
       <button type="button" on:click={handleLikeSong}
         >{song.isLiked ? "Remove from" : "Add to"} your Liked Songs</button
