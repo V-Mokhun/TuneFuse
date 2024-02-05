@@ -20,11 +20,12 @@
     createTable,
   } from "svelte-headless-table";
   import { addSortBy, addTableFilter } from "svelte-headless-table/plugins";
-  import { readable } from "svelte/store";
+  import { derived, readable } from "svelte/store";
   import SongsActions from "./SongsActions.svelte";
   import SongsTitleCol from "./SongsTitleCol.svelte";
   import SongsSort from "./SongsSort.svelte";
   import SongsFilter from "./SongsFilter.svelte";
+  import SongsActionsContent from "./SongsActionsContent.svelte";
 
   const songs: Tables<"songs">[] = [
     {
@@ -155,7 +156,11 @@
   ]);
 
   const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } =
-    table.createViewModel(columns);
+    table.createViewModel(columns, {
+      rowDataId: (item) => {
+        return String(item.id);
+      },
+    });
   const { sortKeys } = pluginStates.sort;
   const { filterValue } = pluginStates.filter;
 </script>
@@ -208,17 +213,9 @@
               </TableRow>
             </ContextMenuTrigger>
             <ContextMenuContent>
-              <DropdownMenuItem>Add to playlist</DropdownMenuItem>
-              <!-- {#if playlistId}
-                <DropdownMenuItem>Remove from this playlist</DropdownMenuItem>
-              {/if} -->
-              <DropdownMenuItem>
-                <!-- <button type="button" on:click={handleLikeSong}
-                  >{song.isLiked ? "Remove from" : "Add to"} your Liked Songs</button
-                > -->
-              </DropdownMenuItem>
-              <DropdownMenuItem>Add to queue</DropdownMenuItem>
-              <DropdownMenuItem>Delete this song</DropdownMenuItem>
+              {#if row.isData()}
+                <SongsActionsContent song={row.original} />
+              {/if}
             </ContextMenuContent>
           </ContextMenu>
         </Subscribe>
