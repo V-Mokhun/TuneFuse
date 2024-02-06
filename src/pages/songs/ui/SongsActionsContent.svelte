@@ -1,7 +1,6 @@
 <script lang="ts">
   import { session, supabase, type Tables } from "@/shared/lib";
   import {
-    DropdownMenuItem,
     DropdownMenuSub,
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
@@ -28,6 +27,10 @@
     "flex items-center gap-1 w-full rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
 
   let subMenuOpen = false;
+  let searchValue = "";
+  $: filteredPlaylists = playlists.filter((playlist) =>
+    playlist.name.toLowerCase().includes(searchValue.toLowerCase())
+  );
 
   function handleLikeSong() {
     supabase
@@ -61,31 +64,36 @@
 
   async function handleAddToPlaylist(playlistId: number) {
     //TODO: Check if song exists in a playlist, if so then open a modal to confirm the action
-    const { count } = await supabase
-      .from("playlist_song")
-      .select("*", { count: "exact", head: true })
-      .match({ playlist_id: playlistId, user_id: $session!.user.id });
+    try {
+      const { count, error: countError } = await supabase
+        .from("playlist_song")
+        .select("*", { count: "exact", head: true })
+        .match({ playlist_id: playlistId, user_id: $session!.user.id });
 
-    supabase
-      .from("playlist_song")
-      .insert({
+      if (countError) throw countError;
+
+      const { error } = await supabase.from("playlist_song").insert({
         playlist_id: playlistId,
         song_id: song.id,
         user_id: $session!.user.id,
         position: (count ?? 0) + 1,
-      })
-      .then((res) => {
-        if (res.error) {
-          toast.error(res.error.message);
-        } else {
-          toast.success("Song added to playlist");
-        }
       });
+
+      if (error) throw error;
+
+      toast.success("Song added to playlist");
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An error occurred");
+      }
+    }
   }
 
   async function handleAddToNewPlaylist() {
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("playlists")
         .insert([
           {
@@ -95,6 +103,8 @@
           },
         ])
         .select("id");
+
+      if (error) throw error;
 
       if (data) {
         await supabase.from("playlist_song").insert({
@@ -160,7 +170,7 @@
     <ChevronRight class="w-5 h-5" />
   </DropdownMenuSubTrigger>
   <DropdownMenuSubContent
-    class="rounded-sm min-w-60"
+    class="rounded-sm min-w-60 max-h-80 overflow-y-auto"
     fitViewport
     overlap
     on:pointermove={() => (subMenuOpen = true)}
@@ -170,7 +180,12 @@
         size={20}
         class="absolute left-2.5 top-3 h-4 w-4 text-gray-500 dark:text-gray-400"
       />
-      <Input type="text" class="pl-8 max-w-xs" placeholder="Find a playlist" />
+      <Input
+        bind:value={searchValue}
+        type="text"
+        class="pl-8 max-w-xs"
+        placeholder="Find a playlist"
+      />
     </div>
     <button
       class={buttonClasses}
@@ -182,7 +197,7 @@
     </button>
     <Separator />
     <ul>
-      {#each playlists as playlist (playlist.id)}
+      {#each filteredPlaylists as playlist (playlist.id)}
         <li>
           <button
             class={buttonClasses}
