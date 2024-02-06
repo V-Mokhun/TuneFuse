@@ -1,19 +1,25 @@
 <script lang="ts">
   import { Container } from "@/shared/ui";
-  import { afterUpdate, onMount } from "svelte";
   import { AddSong, Songs } from "./ui";
-  import { supabase } from "@/shared/lib";
+  import { session, supabase, songs } from "@/shared/lib";
+  import { toast } from "svelte-sonner";
 
-  afterUpdate(async () => {
-    // if ($session?.user?.id) {
-    // console.log($session?.user?.id);
-    // const songs = await supabase
-    //   .from("songs")
-    //   .select("*")
-    //   .eq("user_id", $session?.user?.id ?? "");
-    // console.log(songs.data);
-    // }
-  });
+  $: fetchSongs($session?.user.id);
+
+  async function fetchSongs(id?: string) {
+    if (!id) return;
+
+    const { data, error } = await supabase
+      .from("songs")
+      .select("*")
+      .eq("user_id", id);
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      $songs = data;
+    }
+  }
 </script>
 
 <section>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { cn, supabase, type Tables } from "@/shared/lib";
+  import { cn, songs, supabase, type Tables } from "@/shared/lib";
   import {
     ContextMenu,
     ContextMenuContent,
@@ -27,38 +27,38 @@
   import SongsFilter from "./SongsFilter.svelte";
   import SongsActionsContent from "./SongsActionsContent.svelte";
 
-  const songs: Tables<"songs">[] = [
-    {
-      id: 9,
-      created_at: "2024-02-03T19:41:39.472273+00:00",
-      updated_at: "2024-02-03T19:41:39.472273+00:00",
-      title: "Forest",
-      artist: "Twenty One Pilots",
-      file_path: "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Forest.mp3",
-      user_id: "844be2a3-9ed5-4f7f-a3fc-8241877707c8",
-      duration: 251,
-      picture_path: "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Forest.jpeg",
-      position: 1,
-      isLiked: false,
-    },
-    {
-      id: 13,
-      created_at: "2024-02-04T09:40:32.84511+00:00",
-      updated_at: "2024-02-04T09:40:32.84511+00:00",
-      title: "Right Or Wrong | beatfakaza.com",
-      artist: "Juice WRLD | beatfakaza.com",
-      file_path:
-        "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Juice-WRLD - Right-Or-Wrong.mp3",
-      user_id: "844be2a3-9ed5-4f7f-a3fc-8241877707c8",
-      duration: 160,
-      picture_path:
-        "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Right Or Wrong _ beatfakaza.com.jpeg",
-      position: 2,
-      isLiked: false,
-    },
-  ];
+  // const songs: Tables<"songs">[] = [
+  //   {
+  //     id: 9,
+  //     created_at: "2024-02-03T19:41:39.472273+00:00",
+  //     updated_at: "2024-02-03T19:41:39.472273+00:00",
+  //     title: "Forest",
+  //     artist: "Twenty One Pilots",
+  //     file_path: "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Forest.mp3",
+  //     user_id: "844be2a3-9ed5-4f7f-a3fc-8241877707c8",
+  //     duration: 251,
+  //     picture_path: "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Forest.jpeg",
+  //     position: 1,
+  //     isLiked: false,
+  //   },
+  //   {
+  //     id: 13,
+  //     created_at: "2024-02-04T09:40:32.84511+00:00",
+  //     updated_at: "2024-02-04T09:40:32.84511+00:00",
+  //     title: "Right Or Wrong | beatfakaza.com",
+  //     artist: "Juice WRLD | beatfakaza.com",
+  //     file_path:
+  //       "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Juice-WRLD - Right-Or-Wrong.mp3",
+  //     user_id: "844be2a3-9ed5-4f7f-a3fc-8241877707c8",
+  //     duration: 160,
+  //     picture_path:
+  //       "844be2a3-9ed5-4f7f-a3fc-8241877707c8/Right Or Wrong _ beatfakaza.com.jpeg",
+  //     position: 2,
+  //     isLiked: false,
+  //   },
+  // ];
 
-  const table = createTable(readable(songs), {
+  const table = createTable(songs, {
     sort: addSortBy({
       disableMultiSort: true,
       toggleOrder: ["asc", "desc"],
