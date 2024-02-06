@@ -10,7 +10,7 @@
   import SongsActionsContent from "./SongsActionsContent.svelte";
 
   export let song: Tables<"songs">;
-  export let playlistId: string | undefined = undefined;
+  export let playlistId: number | undefined = undefined;
 </script>
 
 <DropdownMenu>

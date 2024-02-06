@@ -22,7 +22,7 @@
 
   export let song: Tables<"songs">;
   export let playlists: Tables<"playlists">[] = [];
-  export let playlistId: string | undefined = undefined;
+  export let playlistId: number | undefined = undefined;
 
   const buttonClasses =
     "flex items-center gap-1 w-full rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
@@ -114,10 +114,30 @@
       }
     }
   }
+
+  async function handleRemoveFromPlaylist() {
+    if (!playlistId) return;
+
+    try {
+      await supabase.from("playlist_song").delete().match({
+        playlist_id: playlistId,
+        song_id: song.id,
+        user_id: $session!.user.id,
+      });
+
+      toast.success("Song removed from playlist");
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An error occurred");
+      }
+    }
+  }
 </script>
 
 <DropdownMenuSub
-  open={true || subMenuOpen}
+  open={subMenuOpen}
   onOpenChange={(open) => (subMenuOpen = open)}
 >
   <DropdownMenuSubTrigger
@@ -177,7 +197,11 @@
   </DropdownMenuSubContent>
 </DropdownMenuSub>
 {#if playlistId}
-  <button class={buttonClasses} type="button">
+  <button
+    class={buttonClasses}
+    type="button"
+    on:click={handleRemoveFromPlaylist}
+  >
     <XCircle class="w-5 h-5" />
     <span>Remove from this playlist</span>
   </button>
