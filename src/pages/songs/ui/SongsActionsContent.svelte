@@ -82,6 +82,38 @@
         }
       });
   }
+
+  async function handleAddToNewPlaylist() {
+    try {
+      const { data } = await supabase
+        .from("playlists")
+        .insert([
+          {
+            name: song.title,
+            picture_path: song.picture_path,
+            user_id: $session!.user.id,
+          },
+        ])
+        .select("id");
+
+      if (data) {
+        await supabase.from("playlist_song").insert({
+          playlist_id: data[0].id,
+          song_id: song.id,
+          user_id: $session!.user.id,
+          position: 1,
+        });
+
+        toast.success("Song added to new playlist");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An error occurred");
+      }
+    }
+  }
 </script>
 
 <DropdownMenuSub
@@ -120,7 +152,11 @@
       />
       <Input type="text" class="pl-8 max-w-xs" placeholder="Find a playlist" />
     </div>
-    <button class={buttonClasses} type="button">
+    <button
+      class={buttonClasses}
+      type="button"
+      on:click={handleAddToNewPlaylist}
+    >
       <PlusCircle class="w-5 h-5" />
       <span>New playlist</span>
     </button>
