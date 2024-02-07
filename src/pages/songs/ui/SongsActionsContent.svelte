@@ -48,18 +48,27 @@
       });
   }
 
-  function handleDeleteSong() {
-    supabase
-      .from("songs")
-      .delete()
-      .eq("id", song.id)
-      .then((res) => {
-        if (res.error) {
-          toast.error(res.error.message);
-        } else {
-          toast.success("Song deleted");
-        }
-      });
+  async function handleDeleteSong() {
+    const promises = [
+      supabase.from("songs").delete().eq("id", song.id),
+      supabase.from("playlist_song").delete().eq("song_id", song.id),
+      supabase.storage.from("songs").remove([song.file_path]),
+    ];
+
+    if (song.picture_path) {
+      promises.push(
+        supabase.storage.from("songs-pictures").remove([song.picture_path])
+      );
+    }
+
+    const responses = await Promise.all(promises);
+    const errors = responses.filter((res) => res.error);
+
+    if (errors.length > 0) {
+      toast.error("An error occurred");
+    } else {
+      toast.success("Song deleted");
+    }
   }
 
   async function handleAddToPlaylist(playlistId: number) {

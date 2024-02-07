@@ -95,7 +95,7 @@ export interface Database {
           artist: string | null;
           created_at: string;
           duration: number;
-          file_path: string | null;
+          file_path: string;
           id: number;
           isLiked: boolean;
           picture_path: string | null;
@@ -108,7 +108,7 @@ export interface Database {
           artist?: string | null;
           created_at?: string;
           duration: number;
-          file_path?: string | null;
+          file_path?: string;
           id?: number;
           isLiked?: boolean;
           picture_path?: string | null;
@@ -121,7 +121,7 @@ export interface Database {
           artist?: string | null;
           created_at?: string;
           duration?: number;
-          file_path?: string | null;
+          file_path?: string;
           id?: number;
           isLiked?: boolean;
           picture_path?: string | null;
