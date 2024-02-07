@@ -1,6 +1,7 @@
 <script lang="ts">
   import { session, supabase, type Tables } from "@/shared/lib";
   import {
+    DropdownMenuItem,
     DropdownMenuSub,
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
@@ -230,6 +231,7 @@
     <span>Remove from this playlist</span>
   </button>
 {/if}
+
 <button class={buttonClasses} type="button" on:click={handleLikeSong}>
   {#if song.isLiked}
     <PlusCircle class="w-5 h-5" />
@@ -239,10 +241,12 @@
   <span>{song.isLiked ? "Remove from" : "Add to"} your Liked Songs</span
   ></button
 >
+
 <button class={buttonClasses} type="button">
   <ListPlus class="w-5 h-5" />
   <span>Add to queue</span>
 </button>
+
 <button class={buttonClasses} type="button" on:click={handleDeleteSong}>
   <Trash class="w-5 h-5" />
   <span>Delete this song</span>

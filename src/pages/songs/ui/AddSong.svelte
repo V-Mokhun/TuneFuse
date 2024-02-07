@@ -18,9 +18,14 @@
 
     const song = songs[0];
     const metadata = ((await parseAudioMetadata(song)) ?? {}) as any;
-    const filePath = `${$session.user.id}/${song.name}`;
+
+    const invalidCharsRegex = /[^a-zA-Z0-9-_.]/g;
+    const filePath = `${$session.user.id}/${song.name.replace(
+      invalidCharsRegex,
+      ""
+    )}`;
     const picturePath = metadata.picture
-      ? `${$session.user.id}/${metadata.title.replace(/[<>:"/\\|?*]/g, "_")}.${
+      ? `${$session.user.id}/${metadata.title.replace(invalidCharsRegex, "")}.${
           metadata.picture.type.split("/")[1]
         }`
       : null;
@@ -33,9 +38,7 @@
       .limit(1)
       .single();
 
-    let position = lastSong.data?.position
-      ? lastSong.data.position + 1
-      : 1;
+    let position = lastSong.data?.position ? lastSong.data.position + 1 : 1;
 
     const songData: TablesInsert<"songs"> = {
       duration: metadata.duration,
